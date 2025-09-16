@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}About - Maimo Harris{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="cyber-card text-center sticky-top">
+                    {% if profile.profile_image %}
+                    <img src="{{ profile.profile_image.url }}" class="rounded-circle mb-4" style="width: 200px; height: 200px; object-fit: cover;" alt="Maimo Harris">
+                    {% else %}
+                    <div class="bg-gradient rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center" style="width: 200px; height: 200px;">
+                        <i class="fas fa-user-shield fa-4x text-white"></i>
+                    </div>
+                    {% endif %}
+                    <h3 class="text-gradient mb-2">{{ profile.name|default:"Maimo Harris" }}</h3>
+                    <p class="text-muted mb-4">{{ profile.title|default:"Red Team Specialist" }}</p>
+                    
+                    <div class="d-flex justify-content-center gap-3 mb-4">
+                        <a href="https://linkedin.com/in/maimoharris" class="btn btn-outline-info btn-sm">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://github.com/Maimoharris" class="btn btn-outline-info btn-sm">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="mailto:maimoharris111@gmail.com" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                    
+                    {% if profile.resume %}
+                    <a href="{{ profile.resume.url }}" class="cyber-btn w-100" download>
+                        <i class="fas fa-download me-2"></i>Download CV
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="col-lg-8">
+                <div class="cyber-card mb-5">
+                    <h2 class="text-gradient mb-4">About Me</h2>
+                    <div class="text-muted">
+                        {{ profile.bio|default:"<p>Passionate and hands-on offensive security professional with over 5 years of practical experience in red teaming, penetration testing, malware analysis, and bug bounty hunting — including 3+ years of professional experience as a Pentester.</p><p>I actively apply Machine Learning in offensive security research, developing intelligent automation techniques for vulnerability discovery, malware behavior analysis, and anomaly detection.</p>"|safe }}
+                    </div>
+                </div>
+
+                <!-- Experience -->
+                <div class="cyber-card mb-5">
+                    <h3 class="text-gradient mb-4">Professional Experience</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="cyber-card">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="text-white">Red Team Lead Assistant & Penetration Tester</h5>
+                                    <span class="badge bg-success">Current</span>
+                                </div>
+                                <p class="text-info mb-2">Skye8 • August 2024 - Present</p>
+                                <ul class="text-muted">
+                                    <li>Supported and coordinated internal red team operations</li>
+                                    <li>Conducted web, network, IoT, and mobile application penetration testing</li>
+                                    <li>Developed custom malware and payloads for simulation exercises</li>
+                                    <li>Integrated ML models for automated log analysis</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="cyber-card">
+                                <h5 class="text-white">Web Application Penetration Tester</h5>
+                                <p class="text-info mb-2">CVA-Tech Ventures • May 2024 - May 2025</p>
+                                <ul class="text-muted">
+                                    <li>Performed manual and automated vulnerability assessments</li>
+                                    <li>Identified OWASP Top 10 vulnerabilities</li>
+                                    <li>Used tools like Burp Suite, OWASP ZAP, SQLMap</li>
+                                    <li>Delivered professional security reports</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="cyber-card">
+                                <h5 class="text-white">Bug Bounty Researcher</h5>
+                                <p class="text-info mb-2">HackerOne, Bugcrowd • Feb 2021 - Present</p>
+                                <ul class="text-muted">
+                                    <li>Identified critical vulnerabilities (IDOR, XSS, SQLi, SSRF)</li>
+                                    <li>Recognized in hall of fame for responsible disclosures</li>
+                                    <li>Utilized custom Python payloads and automation</li>
+                                    <li>Leveraged ML-based recon tools for large-scope targets</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills -->
+                <div class="cyber-card">
+                    <h3 class="text-gradient mb-4">Technical Skills</h3>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <h6 class="text-white">Penetration Testing</h6>
+                            <div class="progress-cyber mb-2">
+                                <div class="progress-bar" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-white">Python Programming</h6>
+                            <div class="progress-cyber mb-2">
+                                <div class="progress-bar" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-white">Malware Analysis</h6>
+                            <div class="progress-cyber mb-2">
+                                <div class="progress-bar" style="width: 88%"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-white">Network Security</h6>
+                            <div class="progress-cyber mb-2">
+                                <div class="progress-bar" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-white">Web Pentesting</h6>
+                            <div class="progress-cyber mb-2">
+                                <div class="progress-bar" style="width: 94%"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-white">Machine Learning</h6>
+                            <div class="progress-cyber mb-2">
+                                <div class="progress-bar" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

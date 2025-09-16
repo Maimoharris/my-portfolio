@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ project.title }} - Maimo Harris{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb cyber-card py-2 px-3">
+                <li class="breadcrumb-item"><a href="{% url 'portfolio:projects' %}" class="text-info text-decoration-none">Projects</a></li>
+                <li class="breadcrumb-item active text-gradient" aria-current="page">{{ project.title }}</li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Project Header -->
+                <div class="cyber-card mb-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            {% if project.is_featured %}
+                            <span class="badge bg-warning mb-2">Featured</span>
+                            {% endif %}
+                            <h1 class="mb-2">{{ project.title }}</h1>
+                        </div>
+                        <span class="badge bg-info">{{ project.category }}</span>
+                    </div>
+                    
+                    <div class="d-flex align-items-center mb-4 text-muted">
+                        <small class="me-3"><i class="fas fa-calendar me-1"></i>{{ project.date_completed|date:"M Y" }}</small>
+                        {% if project.read_time %}
+                        <small class="me-3"><i class="fas fa-clock me-1"></i>{{ project.read_time }} min read</small>
+                        {% endif %}
+                    </div>
+
+                    {% if project.image %}
+                    <img src="{{ project.image.url }}" class="img-fluid rounded mb-4" alt="{{ project.title }}">
+                    {% endif %}
+
+                    <!-- Project Description -->
+                    <div class="project-content mb-4">
+                        {{ project.description|linebreaks }}
+                    </div>
+
+                    <!-- Key Features -->
+                    {% if project.key_features %}
+                    <div class="mb-4">
+                        <h4 class="text-gradient mb-3">Key Features</h4>
+                        <div class="row g-3">
+                            {% for feature in project.get_features_list %}
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <span>{{ feature }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Technologies -->
+                    {% if project.technologies %}
+                    <div class="mb-4">
+                        <h4 class="text-gradient mb-3">Technologies Used</h4>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for tech in project.get_technologies_list %}
+                            <span class="badge bg-dark text-info border border-info p-2">{{ tech }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Project Links -->
+                    <div class="d-flex gap-3 mb-4">
+                        {% if project.github_url %}
+                        <a href="{{ project.github_url }}" target="_blank" class="cyber-btn">
+                            <i class="fab fa-github me-2"></i>View Code
+                        </a>
+                        {% endif %}
+                        {% if project.live_url %}
+                        <a href="{{ project.live_url }}" target="_blank" class="cyber-btn cyber-btn-outline">
+                            <i class="fas fa-external-link-alt me-2"></i>Live Demo
+                        </a>
+                        {% endif %}
+                        {% if project.documentation_url %}
+                        <a href="{{ project.documentation_url }}" target="_blank" class="cyber-btn cyber-btn-outline">
+                            <i class="fas fa-book me-2"></i>Documentation
+                        </a>
+                        {% endif %}
+                    </div>
+
+                    <!-- Security Aspects (for security projects) -->
+                    {% if project.security_aspects %}
+                    <div class="cyber-card bg-dark border-info mb-4">
+                        <h5 class="text-info mb-3"><i class="fas fa-shield-alt me-2"></i>Security Focus</h5>
+                        <div class="row g-3">
+                            {% for aspect in project.get_security_aspects_list %}
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-lock text-info me-2"></i>
+                                    <span>{{ aspect }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Related Projects -->
+                {% if related_projects %}
+                <div class="cyber-card p-4 mb-5">
+                    <h4 class="text-gradient mb-4">Related Projects</h4>
+                    <div class="row g-4">
+                        {% for related_project in related_projects %}
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                {% if related_project.image %}
+                                <img src="{{ related_project.image.url }}" class="rounded me-3" width="80" height="80" alt="{{ related_project.title }}">
+                                {% else %}
+                                <div class="bg-gradient rounded me-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                    <i class="fas fa-project-diagram text-white"></i>
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <h6><a href="{% url 'portfolio:project_detail' related_project.pk %}" class="text-decoration-none text-white">{{ related_project.title|truncatewords:5 }}</a></h6>
+                                    <small class="text-muted">{{ related_project.category }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Project Meta Information -->
+                <div class="cyber-card mb-4">
+                    <h5 class="text-gradient mb-3">Project Details</h5>
+                    <div class="mb-3">
+                        <h6 class="text-info">Category</h6>
+                        <p class="mb-0">{{ project.category }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="text-info">Status</h6>
+                        <p class="mb-0">{{ project.status|default:"Completed" }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="text-info">Completion Date</h6>
+                        <p class="mb-0">{{ project.date_completed|date:"F Y" }}</p>
+                    </div>
+                    {% if project.client %}
+                    <div class="mb-3">
+                        <h6 class="text-info">Client</h6>
+                        <p class="mb-0">{{ project.client }}</p>
+                    </div>
+                    {% endif %}
+                    {% if project.difficulty %}
+                    <div class="mb-3">
+                        <h6 class="text-info">Difficulty Level</h6>
+                        <div class="d-flex align-items-center">
+                            {% for i in "12345" %}
+                            <i class="fas fa-star {% if forloop.counter <= project.difficulty %}text-warning{% else %}text-muted{% endif %} me-1"></i>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Technology Stack -->
+                {% if project.technologies %}
+                <div class="cyber-card mb-4">
+                    <h5 class="text-gradient mb-3">Tech Stack</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for tech in project.get_technologies_list %}
+                        <span class="badge bg-secondary">{{ tech }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Project Links Sidebar -->
+                <div class="cyber-card mb-4">
+                    <h5 class="text-gradient mb-3">Project Links</h5>
+                    <div class="d-grid gap-2">
+                        {% if project.github_url %}
+                        <a href="{{ project.github_url }}" target="_blank" class="btn btn-outline-info text-start">
+                            <i class="fab fa-github me-2"></i>GitHub Repository
+                        </a>
+                        {% endif %}
+                        {% if project.live_url %}
+                        <a href="{{ project.live_url }}" target="_blank" class="btn btn-outline-info text-start">
+                            <i class="fas fa-external-link-alt me-2"></i>Live Demo
+                        </a>
+                        {% endif %}
+                        {% if project.documentation_url %}
+                        <a href="{{ project.documentation_url }}" target="_blank" class="btn btn-outline-info text-start">
+                            <i class="fas fa-book me-2"></i>Documentation
+                        </a>
+                        {% endif %}
+                        {% if project.video_url %}
+                        <a href="{{ project.video_url }}" target="_blank" class="btn btn-outline-info text-start">
+                            <i class="fas fa-video me-2"></i>Video Demo
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Share Project -->
+                <div class="cyber-card">
+                    <h5 class="text-gradient mb-3">Share Project</h5>
+                    <div class="d-flex gap-2">
+                        <a href="https://twitter.com/intent/tweet?text={{ project.title|urlencode }}&url={{ request.build_absolute_uri|urlencode }}" 
+                           class="btn btn-sm btn-outline-info" target="_blank">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}" 
+                           class="btn btn-sm btn-outline-info" target="_blank">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" 
+                           class="btn btn-sm btn-outline-info" target="_blank">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .project-content {
+        line-height: 1.8;
+        color: var(--cyber-gray-300);
+    }
+    
+    .project-content h2,
+    .project-content h3,
+    .project-content h4 {
+        color: var(--cyber-cyan);
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .project-content p {
+        margin-bottom: 1.5rem;
+    }
+    
+    .project-content code {
+        background: var(--cyber-gray-800);
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+        color: var(--cyber-orange);
+        font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .project-content pre {
+        background: var(--cyber-gray-900);
+        border: 1px solid var(--cyber-gray-700);
+        border-radius: 8px;
+        padding: 1.5rem;
+        overflow-x: auto;
+        margin: 1.5rem 0;
+    }
+    
+    .project-content pre code {
+        background: none;
+        padding: 0;
+        color: var(--cyber-gray-300);
+    }
+    
+    .project-content ul, 
+    .project-content ol {
+        margin: 1.5rem 0;
+        padding-left: 2rem;
+    }
+    
+    .project-content li {
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}

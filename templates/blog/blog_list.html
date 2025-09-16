@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Blog - Maimo Harris{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="section-title">
+            <h2>Security Blog</h2>
+            <p>Latest insights on cybersecurity, penetration testing, and red team operations</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="row g-4">
+                    {% for post in posts %}
+                    <div class="col-md-6">
+                        <article class="cyber-card h-100">
+                            {% if post.featured_image %}
+                            <img src="{{ post.featured_image.url }}" class="img-fluid rounded mb-3" alt="{{ post.title }}">
+                            {% else %}
+                            <div class="bg-gradient rounded mb-3 d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-blog fa-3x text-white"></i>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-info">{{ post.category.name }}</span>
+                                <small class="text-muted">{{ post.created_at|date:"M d, Y" }}</small>
+                            </div>
+                            
+                            <h5><a href="{{ post.get_absolute_url }}" class="text-decoration-none text-gradient">{{ post.title }}</a></h5>
+                            <p class="text-muted mb-3">{{ post.excerpt|truncatewords:20 }}</p>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>{{ post.read_time }} min read
+                                </small>
+                                <a href="{{ post.get_absolute_url }}" class="btn btn-sm cyber-btn">Read More</a>
+                            </div>
+                        </article>
+                    </div>
+                    {% empty %}
+                    <div class="col-12 text-center">
+                        <div class="cyber-card">
+                            <i class="fas fa-blog fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No Blog Posts Yet</h5>
+                            <p class="text-muted">Stay tuned for security insights and tutorials!</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Pagination -->
+                {% if posts.has_other_pages %}
+                <nav class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        {% if posts.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link bg-dark border-secondary text-info" href="?page={{ posts.previous_page_number }}">Previous</a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for num in posts.paginator.page_range %}
+                        <li class="page-item {% if posts.number == num %}active{% endif %}">
+                            <a class="page-link bg-dark border-secondary text-info" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endfor %}
+                        
+                        {% if posts.has_next %}
+                        <li class="page-item">
+                            <a class="page-link bg-dark border-secondary text-info" href="?page={{ posts.next_page_number }}">Next</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Featured Posts -->
+                {% if featured_posts %}
+                <div class="cyber-card mb-4">
+                    <h5 class="text-gradient mb-3">Featured Posts</h5>
+                    {% for post in featured_posts %}
+                    <div class="border-bottom border-secondary pb-3 mb-3">
+                        <h6><a href="{{ post.get_absolute_url }}" class="text-decoration-none text-white">{{ post.title|truncatewords:8 }}</a></h6>
+                        <small class="text-muted">{{ post.created_at|date:"M d, Y" }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- Categories -->
+                {% if categories %}
+                <div class="cyber-card">
+                    <h5 class="text-gradient mb-3">Categories</h5>
+                    {% for category in categories %}
+                    <a href="{% url 'blog:blog_by_category' category.slug %}" class="btn btn-outline-secondary btn-sm me-2 mb-2">
+                        {{ category.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

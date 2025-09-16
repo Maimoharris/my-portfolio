@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Projects - Maimo Harris{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="section-title">
+            <h2>Security Projects</h2>
+            <p>Latest security research and development projects</p>
+        </div>
+        
+        <!-- Filter Buttons -->
+        <div class="text-center mb-5">
+            <div class="btn-group" role="group">
+                <a href="?category=all" class="btn {% if current_category == 'all' %}cyber-btn{% else %}cyber-btn-outline{% endif %}">All</a>
+                {% for category_key, category_name in categories %}
+                <a href="?category={{ category_key }}" class="btn {% if current_category == category_key %}cyber-btn{% else %}cyber-btn-outline{% endif %}">{{ category_name }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            {% for project in projects %}
+            <div class="col-lg-6">
+                <div class="cyber-card h-100">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            {% if project.image %}
+                            <img src="{{ project.image.url }}" class="img-fluid rounded" alt="{{ project.title }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                            <div class="bg-gradient rounded d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-project-diagram fa-3x text-white"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <div class="p-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="text-gradient">{{ project.title }}</h5>
+                                    {% if project.is_featured %}
+                                    <span class="badge bg-warning">Featured</span>
+                                    {% endif %}
+                                </div>
+                                <p class="text-muted mb-3">{{ project.description|truncatewords:15 }}</p>
+                                
+                                <!-- Technologies -->
+                                <div class="mb-3">
+                                    {% for tech in project.get_technologies_list %}
+                                    <span class="badge bg-secondary me-1 mb-1">{{ tech }}</span>
+                                    {% endfor %}
+                                </div>
+                                
+                                <!-- Links -->
+                                <div class="d-flex gap-2">
+                                    <a href="{% url 'portfolio:project_detail' project.pk %}" class="btn btn-sm cyber-btn">
+                                        <i class="fas fa-eye"></i> Details
+                                    </a>
+                                    {% if project.github_url %}
+                                    <a href="{{ project.github_url }}" target="_blank" class="btn btn-sm cyber-btn-outline">
+                                        <i class="fab fa-github"></i> Code
+                                    </a>
+                                    {% endif %}
+                                    {% if project.live_url %}
+                                    <a href="{{ project.live_url }}" target="_blank" class="btn btn-sm cyber-btn-outline">
+                                        <i class="fas fa-external-link-alt"></i> Live
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <div class="cyber-card">
+                    <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No Projects Found</h5>
+                    <p class="text-muted">Projects will be displayed here once they are added.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

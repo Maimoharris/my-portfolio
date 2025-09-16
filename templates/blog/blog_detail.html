@@ -1,0 +1,329 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ post.title }} - Maimo Harris{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb cyber-card py-2 px-3">
+                <li class="breadcrumb-item"><a href="{% url 'blog:blog_list' %}" class="text-info text-decoration-none">Blog</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'blog:blog_by_category' post.category.slug %}" class="text-info text-decoration-none">{{ post.category.name }}</a></li>
+                <li class="breadcrumb-item active text-gradient" aria-current="page">{{ post.title|truncatewords:5 }}</li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Article Header -->
+                <article class="cyber-card mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge bg-info">{{ post.category.name }}</span>
+                        <small class="text-muted">{{ post.created_at|date:"M d, Y" }}</small>
+                    </div>
+                    
+                    <h1 class="mb-3">{{ post.title }}</h1>
+                    
+                    <div class="d-flex align-items-center mb-4 text-muted">
+                        <small class="me-3"><i class="fas fa-clock me-1"></i>{{ post.read_time }} min read</small>
+                        <small><i class="fas fa-eye me-1"></i>{{ post.views }} views</small>
+                    </div>
+
+                    {% if post.featured_image %}
+                    <img src="{{ post.featured_image.url }}" class="img-fluid rounded mb-4" alt="{{ post.title }}">
+                    {% endif %}
+
+                    <!-- Article Content -->
+                    <div class="article-content">
+                        {{ post.content|safe }}
+                    </div>
+
+                    <!-- Tags -->
+                    {% if post.tags.all %}
+                    <div class="mt-4 pt-3 border-top border-secondary">
+                        <h6 class="text-gradient mb-2">Tags:</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for tag in post.tags.all %}
+                            <a href="{% url 'blog:blog_by_tag' tag.slug %}" class="badge bg-dark text-info border border-info">
+                                #{{ tag.name }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Share Buttons -->
+                    <div class="mt-4 pt-3 border-top border-secondary">
+                        <h6 class="text-gradient mb-2">Share this post:</h6>
+                        <div class="d-flex gap-2">
+                            <a href="https://twitter.com/intent/tweet?text={{ post.title|urlencode }}&url={{ request.build_absolute_uri|urlencode }}" 
+                               class="btn btn-sm btn-outline-info" target="_blank">
+                                <i class="fab fa-twitter me-1"></i>Twitter
+                            </a>
+                            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}" 
+                               class="btn btn-sm btn-outline-info" target="_blank">
+                                <i class="fab fa-linkedin me-1"></i>LinkedIn
+                            </a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" 
+                               class="btn btn-sm btn-outline-info" target="_blank">
+                                <i class="fab fa-facebook me-1"></i>Facebook
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Navigation Between Posts -->
+                <div class="row g-3 mb-5">
+                    <div class="col-md-6">
+                        {% if previous_post %}
+                        <a href="{{ previous_post.get_absolute_url }}" class="cyber-card d-block p-3 text-decoration-none">
+                            <small class="text-muted d-block mb-1">Previous Post</small>
+                            <h6 class="text-gradient mb-0">{{ previous_post.title|truncatewords:6 }}</h6>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        {% if next_post %}
+                        <a href="{{ next_post.get_absolute_url }}" class="cyber-card d-block p-3 text-decoration-none text-end">
+                            <small class="text-muted d-block mb-1">Next Post</small>
+                            <h6 class="text-gradient mb-0">{{ next_post.title|truncatewords:6 }}</h6>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Related Posts -->
+                {% if related_posts %}
+                <div class="cyber-card p-4 mb-5">
+                    <h4 class="text-gradient mb-4">Related Posts</h4>
+                    <div class="row g-4">
+                        {% for related_post in related_posts %}
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                {% if related_post.featured_image %}
+                                <img src="{{ related_post.featured_image.url }}" class="rounded me-3" width="80" height="80" alt="{{ related_post.title }}">
+                                {% else %}
+                                <div class="bg-gradient rounded me-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                    <i class="fas fa-blog text-white"></i>
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <h6><a href="{{ related_post.get_absolute_url }}" class="text-decoration-none text-white">{{ related_post.title|truncatewords:5 }}</a></h6>
+                                    <small class="text-muted">{{ related_post.created_at|date:"M d, Y" }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Comments Section (Optional) -->
+                {% if post.allow_comments %}
+                <div class="cyber-card p-4">
+                    <h4 class="text-gradient mb-4">Discussion</h4>
+                    <!-- Comments would go here -->
+                    <div class="text-center py-4">
+                        <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Comments are moderated for security content.</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Author Bio -->
+                <div class="cyber-card mb-4">
+                    <h5 class="text-gradient mb-3">About the Author</h5>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-gradient rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
+                            <i class="fas fa-user-shield text-white"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Maimo Harris</h6>
+                            <small class="text-muted">Red Team Specialist</small>
+                        </div>
+                    </div>
+                    <p class="text-muted small">
+                        Offensive security professional with 5+ years of experience in red teaming, 
+                        penetration testing, and malware analysis. Specializing in Web, Mobile, IoT, 
+                        and Network security assessments.
+                    </p>
+                    <div class="d-flex gap-2">
+                        <a href="https://linkedin.com/in/maimoharris" class="btn btn-sm btn-outline-info" target="_blank">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://github.com/Maimoharris" class="btn btn-sm btn-outline-info" target="_blank">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="mailto:maimoharris111@gmail.com" class="btn btn-sm btn-outline-info">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Table of Contents (Optional) -->
+                {% if post.show_toc %}
+                <div class="cyber-card mb-4">
+                    <h5 class="text-gradient mb-3">Table of Contents</h5>
+                    <div id="toc" class="toc-container">
+                        <!-- JavaScript would generate this dynamically -->
+                        <div class="text-center py-3">
+                            <i class="fas fa-list fa-2x text-muted mb-2"></i>
+                            <p class="text-muted small">Table of contents would appear here</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Categories -->
+                {% if categories %}
+                <div class="cyber-card mb-4">
+                    <h5 class="text-gradient mb-3">Categories</h5>
+                    <div class="list-group list-group-flush">
+                        {% for category in categories %}
+                        <a href="{% url 'blog:blog_by_category' category.slug %}" 
+                           class="list-group-item list-group-item-action bg-transparent text-white border-secondary 
+                                  {% if category.slug == post.category.slug %}active bg-cyber{% endif %}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>{{ category.name }}</span>
+                                <span class="badge bg-info rounded-pill">{{ category.post_count }}</span>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Recent Posts -->
+                {% if recent_posts %}
+                <div class="cyber-card">
+                    <h5 class="text-gradient mb-3">Recent Posts</h5>
+                    {% for recent_post in recent_posts %}
+                    <div class="border-bottom border-secondary pb-3 mb-3">
+                        <h6><a href="{{ recent_post.get_absolute_url }}" class="text-decoration-none text-white">{{ recent_post.title|truncatewords:8 }}</a></h6>
+                        <small class="text-muted">{{ recent_post.created_at|date:"M d, Y" }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .article-content {
+        line-height: 1.8;
+        color: var(--cyber-gray-300);
+    }
+    
+    .article-content h2,
+    .article-content h3,
+    .article-content h4 {
+        color: var(--cyber-cyan);
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .article-content p {
+        margin-bottom: 1.5rem;
+    }
+    
+    .article-content code {
+        background: var(--cyber-gray-800);
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+        color: var(--cyber-orange);
+        font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .article-content pre {
+        background: var(--cyber-gray-900);
+        border: 1px solid var(--cyber-gray-700);
+        border-radius: 8px;
+        padding: 1.5rem;
+        overflow-x: auto;
+        margin: 1.5rem 0;
+    }
+    
+    .article-content pre code {
+        background: none;
+        padding: 0;
+        color: var(--cyber-gray-300);
+    }
+    
+    .article-content blockquote {
+        border-left: 4px solid var(--cyber-cyan);
+        padding-left: 1.5rem;
+        margin: 1.5rem 0;
+        color: var(--cyber-gray-400);
+        font-style: italic;
+    }
+    
+    .article-content ul, 
+    .article-content ol {
+        margin: 1.5rem 0;
+        padding-left: 2rem;
+    }
+    
+    .article-content li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .article-content a {
+        color: var(--cyber-cyan);
+        text-decoration: none;
+    }
+    
+    .article-content a:hover {
+        text-decoration: underline;
+    }
+    
+    .article-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+    }
+    
+    .toc-container {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+</style>
+
+<script>
+    // Simple table of contents generation
+    document.addEventListener('DOMContentLoaded', function() {
+        const headings = document.querySelectorAll('.article-content h2, .article-content h3');
+        const tocContainer = document.getElementById('toc');
+        
+        if (headings.length > 0 && tocContainer) {
+            tocContainer.innerHTML = '<ul class="list-group list-group-flush"></ul>';
+            const tocList = tocContainer.querySelector('ul');
+            
+            headings.forEach(heading => {
+                const level = heading.tagName.toLowerCase();
+                const id = heading.textContent.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+                heading.id = id;
+                
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item bg-transparent border-secondary';
+                
+                const link = document.createElement('a');
+                link.href = `#${id}`;
+                link.className = 'text-decoration-none text-white small';
+                link.innerHTML = level === 'h2' ? 
+                    `<i class="fas fa-chevron-right me-2 text-info small"></i>${heading.textContent}` :
+                    `<i class="fas fa-chevron-right me-2 text-muted small"></i><span class="ms-3">${heading.textContent}</span>`;
+                
+                listItem.appendChild(link);
+                tocList.appendChild(listItem);
+            });
+        }
+    });
+</script>
+{% endblock %}

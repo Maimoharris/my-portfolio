@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact - Maimo Harris{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="section-title">
+            <h2>Get In Touch</h2>
+            <p>Ready to secure your systems? Let's discuss your security needs</p>
+        </div>
+        
+        <div class="row g-5">
+            <div class="col-lg-8">
+                <div class="cyber-card">
+                    <h4 class="text-gradient mb-4">Send a Message</h4>
+                    
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-white">Name</label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-white">Email</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label text-white">Subject</label>
+                                {{ form.subject }}
+                                {% if form.subject.errors %}
+                                <div class="text-danger small mt-1">{{ form.subject.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label text-white">Message</label>
+                                {{ form.message }}
+                                {% if form.message.errors %}
+                                <div class="text-danger small mt-1">{{ form.message.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="cyber-btn">
+                                    <i class="fas fa-paper-plane me-2"></i>Send Message
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="cyber-card mb-4">
+                    <h5 class="text-gradient mb-4">Contact Information</h5>
+                    <div class="contact-item mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="skill-icon me-3" style="width: 40px; height: 40px; font-size: 1rem;">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-white mb-1">Email</h6>
+                                <a href="mailto:maimoharris111@gmail.com" class="text-muted text-decoration-none">maimoharris111@gmail.com</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="skill-icon me-3" style="width: 40px; height: 40px; font-size: 1rem;">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-white mb-1">Phone</h6>
+                                <a href="tel:+237680226898" class="text-muted text-decoration-none">+237 680 226 898</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- WhatsApp -->
+                    <div class="contact-item mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="skill-icon me-3" style="width: 40px; height: 40px; font-size: 1rem; background: linear-gradient(135deg, #25D366, #128C7E);">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-white mb-1">WhatsApp</h6>
+                                <a href="https://wa.me/237680226898" target="_blank" class="text-muted text-decoration-none">+237 680 226 898</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-item mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="skill-icon me-3" style="width: 40px; height: 40px; font-size: 1rem;">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-white mb-1">Location</h6>
+                                <p class="text-muted mb-0">Bamenda, Cameroon</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cyber-card">
+                    <h5 class="text-gradient mb-4">Connect</h5>
+                    <div class="d-grid gap-2">
+                        <a href="https://linkedin.com/in/maimoharris" target="_blank" class="btn cyber-btn-outline">
+                            <i class="fab fa-linkedin me-2"></i>LinkedIn
+                        </a>
+                        <a href="https://github.com/Maimoharris" target="_blank" class="btn cyber-btn-outline">
+                            <i class="fab fa-github me-2"></i>GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
